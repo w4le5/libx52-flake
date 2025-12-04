@@ -23,7 +23,7 @@
           };
 
           nativeBuildInputs = with pkgs; [
-            autoconf automake autopoint gettext libtool pkg-config
+            autoconf automake gettext libtool pkg-config
           ];
 
           buildInputs = with pkgs; [
