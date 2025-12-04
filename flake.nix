@@ -55,6 +55,11 @@
             cp libx52/*.rules $out/etc/udev/rules.d/ 2>/dev/null || true
           '';
 
+          postPatch = ''
+            sed -i 's|/var/run|$TMPDIR/x52d/run|g' x52d.c
+            sed -i 's|/var/log|$TMPDIR/x52d/log|g' x52d.c
+          '';
+
           meta = with pkgs.lib; {
             description = "C library and daemon for X52/X52Pro/X55 HID devices";
             homepage = "https://github.com/nirenjan/libx52";
