@@ -58,7 +58,7 @@
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            autoconf automake autopoint gettext libtool pkg-config
+            autoconf automake gettext libtool pkg-config
             hidapi hidapi.dev libusb1 libusb1.dev libevdev libevdev.dev
             python3 git
           ];
