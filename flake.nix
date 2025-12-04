@@ -39,11 +39,12 @@
             "--disable-systemd"
           ];
 
-          postInstall = ''
-            # Убираем установку udev-прав в системные каталоги
+          # Патчим Makefile до сборки, чтобы убрать установку udev-прав в системные каталоги
+          preBuild = ''
             sed -i '/install-udevrulesDATA/d' Makefile
+          '';
 
-            # Копируем правила udev в $out
+          postInstall = ''
             mkdir -p $out/etc/udev/rules.d
             cp libx52/*.rules $out/etc/udev/rules.d/ 2>/dev/null || true
           '';
