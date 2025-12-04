@@ -19,7 +19,7 @@
             owner = "nirenjan";
             repo = "libx52";
             rev = "master";
-            sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            sha256 = "sha256-xVOwNinQZ3CLIRoeiIZ90gn/mVsUskCEam72UfMTkjQ=";
           };
 
           nativeBuildInputs = with pkgs; [
