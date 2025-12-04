@@ -44,6 +44,12 @@
             sed -i '/install-udevrulesDATA/d' Makefile
           '';
 
+          installPhase = ''
+            make install
+            mkdir -p $out/var/run
+            mkdir -p $out/var/log
+          '';
+
           postInstall = ''
             mkdir -p $out/etc/udev/rules.d
             cp libx52/*.rules $out/etc/udev/rules.d/ 2>/dev/null || true
