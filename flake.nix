@@ -44,20 +44,9 @@
             sed -i '/install-udevrulesDATA/d' Makefile
           '';
 
-          installPhase = ''
-            make install
-            mkdir -p $out/var/run
-            mkdir -p $out/var/log
-          '';
-
           postInstall = ''
             mkdir -p $out/etc/udev/rules.d
             cp libx52/*.rules $out/etc/udev/rules.d/ 2>/dev/null || true
-          '';
-
-          postPatch = ''
-            sed -i 's|/var/run|$TMPDIR/x52d/run|g' libx52d/x52d.c
-            sed -i 's|/var/log|$TMPDIR/x52d/log|g' libx52d/x52d.c
           '';
 
           meta = with pkgs.lib; {
