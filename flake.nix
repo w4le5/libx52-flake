@@ -56,8 +56,8 @@
           '';
 
           postPatch = ''
-            sed -i 's|/var/run|$TMPDIR/x52d/run|g' x52d.c
-            sed -i 's|/var/log|$TMPDIR/x52d/log|g' x52d.c
+            sed -i 's|/var/run|$TMPDIR/x52d/run|g' libx52d/x52d.c
+            sed -i 's|/var/log|$TMPDIR/x52d/log|g' libx52d/x52d.c
           '';
 
           meta = with pkgs.lib; {
