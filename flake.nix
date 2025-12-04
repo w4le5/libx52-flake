@@ -19,7 +19,7 @@
             owner = "nirenjan";
             repo = "libx52";
             rev = "master";
-            sha256 = "REPLACE_ME";
+            sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
           };
 
           nativeBuildInputs = with pkgs; [
@@ -32,12 +32,10 @@
 
           preConfigure = "./autogen.sh";
 
-          # соответствуют INSTALL.md, но адаптированы под Nix
           configureFlags = [
             "--localstatedir=${placeholder "out"}/var"
             "--sysconfdir=${placeholder "out"}/etc"
             "--with-input-group=input"
-            # udev/systemd dirs устанавливаются автоматически в Nix
           ];
 
           meta = with pkgs.lib; {
