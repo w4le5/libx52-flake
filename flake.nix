@@ -1,42 +1,67 @@
-nixpkgs.overlays = [
-  (final: prev: {
-    libx52 = prev.stdenv.mkDerivation rec {
-      pname = "libx52";
-      version = "unstable-2025-12-05";
+{
+  description = "libx52 — Library and daemon for Saitek X52/X52Pro/X55 flight sticks";
 
-      src = prev.fetchFromGitHub {
-        owner = "nirenjan";
-        repo = "libx52";
-        rev = "master";
-        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # замените после первого запуска
-      };
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
-      nativeBuildInputs = with prev; [
-        autoconf automake autopoint gettext libtool pkg-config
-      ];
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
 
-      buildInputs = with prev; [
-        hidapi libusb1 libevdev python3
-      ];
+        libx52 = pkgs.stdenv.mkDerivation rec {
+          pname = "libx52";
+          version = "unstable-2025-12-05";
 
-      preConfigure = "./autogen.sh";
+          src = pkgs.fetchFromGitHub {
+            owner = "nirenjan";
+            repo = "libx52";
+            rev = "master";
+            sha256 = "REPLACE_ME";
+          };
 
-      configureFlags = [
-        "--prefix=$(out)"
-        "--localstatedir=/var"
-        "--sysconfdir=/etc"
-        "--with-input-group=input"
-      ];
+          nativeBuildInputs = with pkgs; [
+            autoconf automake autopoint gettext libtool pkg-config
+          ];
 
-      meta = with prev.lib; {
-        description = "C library and daemon for Saitek X52/X52Pro/X55";
-        homepage = "https://github.com/nirenjan/libx52";
-        license = licenses.mit;
-        platforms = [ "x86_64-linux" ];
-      };
-    };
+          buildInputs = with pkgs; [
+            hidapi libusb1 libevdev python3
+          ];
 
-    edl = (import stable { system = final.system; config.allowUnfree = true; }).edl;
-    bitchx = self.packages.${final.system}.bitchx;
-  })
-];
+          preConfigure = "./autogen.sh";
+
+          # соответствуют INSTALL.md, но адаптированы под Nix
+          configureFlags = [
+            "--localstatedir=${placeholder "out"}/var"
+            "--sysconfdir=${placeholder "out"}/etc"
+            "--with-input-group=input"
+            # udev/systemd dirs устанавливаются автоматически в Nix
+          ];
+
+          meta = with pkgs.lib; {
+            description = "C library and daemon for X52/X52Pro/X55 HID devices";
+            homepage = "https://github.com/nirenjan/libx52";
+            license = licenses.mit;
+            platforms = platforms.linux;
+          };
+        };
+
+      in {
+        packages.libx52 = libx52;
+        packages.default = libx52;
+
+        overlay = final: prev: {
+          libx52 = libx52;
+        };
+
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            autoconf automake autopoint gettext libtool pkg-config
+            hidapi hidapi.dev libusb1 libusb1.dev libevdev libevdev.dev
+            python3 git
+          ];
+        };
+      });
+}
