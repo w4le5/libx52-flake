@@ -36,6 +36,7 @@
             "--localstatedir=${placeholder "out"}/var"
             "--sysconfdir=${placeholder "out"}/etc"
             "--with-input-group=input"
+            "--disable-systemd"
           ];
 
           meta = with pkgs.lib; {
